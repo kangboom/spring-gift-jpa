@@ -6,7 +6,9 @@ import gift.domain.member.entity.Member;
 import gift.domain.member.repository.MemberRepository;
 import gift.util.JwtUtil;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,12 +22,9 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    public List<MemberResponse> getAllMember() {
-        return memberRepository
-            .findAll()
-            .stream()
-            .map(this::entityToDto)
-            .toList();
+    public Page<MemberResponse> getAllMember(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return memberRepository.findAll(pageable).map(this::entityToDto);
     }
 
     public String register(MemberRequest memberRequest) {

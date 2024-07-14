@@ -5,8 +5,8 @@ import gift.domain.product.dto.ProductResponse;
 import gift.domain.product.entity.Product;
 import gift.domain.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,12 +28,9 @@ public class ProductService {
         return entityToDto(product);
     }
 
-    public List<ProductResponse> getAllProducts(int pageNo, int pageSize) {
+    public Page<ProductResponse> getAllProducts(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        return productRepository.findAll(pageable)
-            .stream()
-            .map(this::entityToDto)
-            .toList();
+        return productRepository.findAll(pageable).map(this::entityToDto);
     }
 
     public ProductResponse addProduct(ProductRequest productRequest) {

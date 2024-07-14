@@ -10,7 +10,7 @@ import gift.domain.wishlist.entity.Wish;
 import gift.domain.wishlist.repository.WishRepository;
 import jakarta.persistence.EntityNotFoundException;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,14 +30,12 @@ public class WishService {
 
     }
 
-    public List<WishResponse> getWishesByMember(Member member, int pageNo, int pageSize) {
+    public Page<WishResponse> getWishesByMember(Member member, int pageNo, int pageSize) {
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         return wishRepository
             .findAllByMember(member, pageable)
-            .stream()
-            .map(this::entityToDto)
-            .toList();
+            .map(this::entityToDto);
     }
 
     public WishResponse addWish(WishRequest wishRequest) {
